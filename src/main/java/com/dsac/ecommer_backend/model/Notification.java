@@ -22,6 +22,7 @@ public class Notification {
 
     public Notification() { }
 
+    public Notification(UUID idNotification, User user, String content, LocalDateTime notificationDate) {
         this.idNotification = idNotification;
         this.user = user;
         this.content = content;
@@ -60,7 +61,4 @@ public class Notification {
         this.notificationDate = notificationDate;
     }
 
-    }
-
-    }
 }
