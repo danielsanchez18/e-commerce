@@ -1,0 +1,107 @@
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_product_by_name`(IN name_product VARCHAR(255))
+BEGIN
+    SELECT * FROM product WHERE name_product = name_product LIMIT 1;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_search_products_by_name`(IN p_name VARCHAR(255), IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT * FROM product WHERE name_product LIKE CONCAT('%', p_name, '%') LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_enabled_products_by_category`(IN p_category VARCHAR(255), IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT p.*
+    FROM product p
+    JOIN category c ON p.id_category = c.id_category
+    WHERE c.name_category = p_category AND p.enabled = TRUE
+    LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_products_by_category`(IN p_category VARCHAR(255), IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT p.*
+    FROM product p
+    JOIN category c ON p.id_category = c.id_category
+    WHERE c.name_category = p_category
+    LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_enabled_products_by_category`(IN p_category VARCHAR(255), IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT p.*
+    FROM product p
+    JOIN category c ON p.id_category = c.id_category
+    WHERE c.name_category = p_category AND p.enabled = TRUE
+    LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_top_selling_products`(IN page INT, IN size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (page - 1) * size;
+    SELECT p.*, COUNT(od.id_order) AS sales
+    FROM product p
+    JOIN order_detail od ON p.id_product = od.id_product
+    GROUP BY p.id_product
+    ORDER BY sales DESC
+    LIMIT offset, size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_top_buying_products`(IN page INT, IN size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (page - 1) * size;
+    SELECT p.*, COUNT(od.id_order) AS purchases
+    FROM product p
+    JOIN order_detail od ON p.id_product = od.id_product
+    GROUP BY p.id_product
+    ORDER BY purchases DESC
+    LIMIT offset, size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_products_by_enabled`(IN enabled BOOLEAN, IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT * FROM product WHERE enabled = enabled LIMIT offset, p_size;
+END $$
+
+DELIMITER ;

@@ -36,3 +36,22 @@
 - Categorias menos populares - paginador (X)
 - Modificar categoría (X)
 - Eliminar categoría (X)
+
+### Producto
+- Agregar producto (X)
+- Obtener todos los productos - paginador (X)
+- Obtener un producto por su nombre (X)
+- Buscar productos por nombre - paginador (X)
+- Obtener productos disponibles - paginador (X)
+- Obtener productos no disponibles - paginador (X)
+- Obtener productos por precio - paginador 
+- Obtener productos por categoria - paginador (X)
+- Obtener productos por categoria y precio - paginador 
+- Obtener productos disponibles por categoria - paginador (X)
+- Obtener porductos por id (X)
+- Obtener productos mas pedidos - paginador (X)
+- Obtener productos menos pedidos - paginador
+- Obtener productos con mas ventas - paginador (X)
+- Obtener productos con menos ventas - paginador
+- Modificar producto (X)
+- Eliminar producto (X)
