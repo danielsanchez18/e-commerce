@@ -19,16 +19,13 @@ public class Notification {
 
     private String content;
     private LocalDateTime notificationDate;
-    private boolean isRead;
 
     public Notification() { }
 
-    public Notification(UUID idNotification, User user, String content, LocalDateTime notificationDate, boolean isRead) {
         this.idNotification = idNotification;
         this.user = user;
         this.content = content;
         this.notificationDate = notificationDate;
-        this.isRead = isRead;
     }
 
     public UUID getIdNotification() {
@@ -63,11 +60,7 @@ public class Notification {
         this.notificationDate = notificationDate;
     }
 
-    public boolean isIsRead() {
-        return isRead;
     }
 
-    public void setIsRead(boolean isRead) {
-        this.isRead = isRead;
     }
 }
