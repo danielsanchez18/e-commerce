@@ -1,0 +1,55 @@
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_category_by_name`(IN name VARCHAR(255))
+BEGIN
+    SELECT * FROM category WHERE name_category = name;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_search_category_by_name`(IN name VARCHAR(255), IN page INT, IN size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (page - 1) * size;
+    SELECT * FROM category WHERE name_category LIKE CONCAT('%', name, '%') LIMIT offset, size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_popular_categories`(IN page INT, IN size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (page - 1) * size;
+    SELECT c.*, COUNT(o.id_order) AS popularity
+    FROM category c
+    JOIN product p ON c.id_category = p.id_category
+    JOIN order_detail od ON p.id_product = od.id_product
+    JOIN orders o ON od.id_order = o.id_order
+    GROUP BY c.id_category
+    ORDER BY popularity DESC
+    LIMIT offset, size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE `sp_find_unpopular_categories`(IN page INT, IN size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (page - 1) * size;
+    SELECT c.*, COUNT(o.id_order) AS popularity
+    FROM category c
+    LEFT JOIN product p ON c.id_category = p.id_category
+    LEFT JOIN order_detail od ON p.id_product = od.id_product
+    LEFT JOIN orders o ON od.id_order = o.id_order
+    GROUP BY c.id_category
+    ORDER BY popularity ASC
+    LIMIT offset, size;
+END $$
+
+DELIMITER ;
