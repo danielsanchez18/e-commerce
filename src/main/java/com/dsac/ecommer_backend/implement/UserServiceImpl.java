@@ -10,13 +10,13 @@ import com.dsac.ecommer_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.module.ResolutionException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -27,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public User saveUser(User user) throws ResourceFoundException {
@@ -44,6 +47,7 @@ public class UserServiceImpl implements UserService {
             userRole.setRole(role);
             user.getUserRoles().add(userRole);
             user.setRegistrationDate(LocalDateTime.now());
+            user.setPassword(this.passwordEncoder.encode(user.getPassword()));
             userExists = userRepository.save(user);
         }
         return userExists;
