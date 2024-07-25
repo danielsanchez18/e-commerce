@@ -32,6 +32,8 @@ public interface ProductService {
 
     List<Product> getTopBuyingProducts (int page, int size);
 
+    Product getTopBuyerProduct(UUID idUser);
+
     Product updateProduct (UUID id, Product product) throws ResourceFoundException;
 
     void deleteProduct (UUID id);

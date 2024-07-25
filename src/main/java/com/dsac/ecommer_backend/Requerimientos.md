@@ -55,3 +55,24 @@
 - Obtener productos con menos ventas - paginador
 - Modificar producto (X)
 - Eliminar producto (X)
+- Obtener el producto mas pedido un usuario
+
+### Usuarios
+- Agregar usuario
+- Obtener usuario por id 
+- Obtener usuario por username
+- Obtener el total de usuarios
+- Obtener todos los usuarios - paginador
+- Obtener usuario por email
+- Obtener el último usuario registrado
+- Obtener usuarios por nombre - paginador 
+- Obtener usuarios por rango de fecha de registro - paginador
+- Obtener usuarios por roles - paginador
+- Obtener usuario disponibles - paginador
+- Obtener usuario no disponibles - paginador
+- Obtener usuarios que más compras han realizado - paginador
+- Cambiar rol de usuario
+- Modificar usuario
+- Eliminar usuario
+
+### Carrito

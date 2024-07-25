@@ -36,4 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query(value = "CALL sp_find_top_buying_products(:page, :size)", nativeQuery = true)
     List<Product> findTopBuyingProducts(@Param("page") int page, @Param("size") int size);
 
+    @Query(value = "CALL sp_find_top_buyer_product(:userId)", nativeQuery = true)
+    Product findTopBuyerProduct(@Param("userId") UUID idUser);
+
 }

@@ -81,6 +81,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product getTopBuyerProduct(UUID idUser) {
+        return productRepository.findTopBuyerProduct(idUser);
+    }
+
+    @Override
     public Product updateProduct(UUID id, Product product) throws ResourceFoundException {
         Product existingProduct = productRepository.findById(id).
                 orElseThrow(() -> new ResourceFoundException("Product not found"));
