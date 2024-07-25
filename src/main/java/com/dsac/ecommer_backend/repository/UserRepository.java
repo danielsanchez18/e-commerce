@@ -6,13 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-
-    User findByUsername(String username);
 
     @Query(value = "CALL sp_find_user_by_email(:email)", nativeQuery = true)
     User findByEmail(@Param("email") String email);
@@ -21,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> searchUserByName(@Param("name") String name, @Param("page") int page, @Param("size") int size);
 
     @Query(value = "CALL sp_find_users_by_register_date(:startDate, :endDate, :page, :size)", nativeQuery = true)
-    List<User> searchUserByRegisterDate(@Param("startDate") String startDate, @Param("endDate") String endDate, @Param("page") int page, @Param("size") int size);
+    List<User> searchUserByRegisterDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("page") int page, @Param("size") int size);
 
     @Query(value = "CALL sp_find_last_user()", nativeQuery = true)
     User lastUser();

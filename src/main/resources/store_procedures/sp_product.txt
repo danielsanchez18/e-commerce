@@ -105,3 +105,18 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_top_buyer_product(IN p_userId UUID)
+BEGIN
+    SELECT p.*, SUM(od.quantity) AS total_quantity
+    FROM product p
+    INNER JOIN order_detail od ON p.idProduct = od.product_id
+    INNER JOIN orders o ON od.order_id = o.idOrder
+    WHERE o.user_id = p_userId
+    GROUP BY p.idProduct
+    ORDER BY total_quantity DESC LIMIT 1;
+END;
+
+DELIMITER $$

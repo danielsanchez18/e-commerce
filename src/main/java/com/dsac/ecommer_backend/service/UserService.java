@@ -1,23 +1,21 @@
 package com.dsac.ecommer_backend.service;
 
 import com.dsac.ecommer_backend.exception.ResourceFoundException;
-import com.dsac.ecommer_backend.model.Product;
 import com.dsac.ecommer_backend.model.User;
 import com.dsac.ecommer_backend.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 public interface UserService {
 
-    User saveUser(User user, Set<UserRole> userRoles) throws ResourceFoundException;
+    User saveUser(User user) throws ResourceFoundException;
 
     User getUserById(UUID id);
-
-    User getUserByUsername(String username);
 
     Long totalUsers();
 
@@ -29,7 +27,7 @@ public interface UserService {
 
     List<User> getUsersByName(String name, int page, int size);
 
-    List<User> getUsersByRegisterDate(String startDate, String endDate, int page, int size);
+    List<User> getUsersByRegisterDate(Date startDate, Date endDate, int page, int size);
 
     List<User> getUsersByRole(String role, int page, int size);
 
@@ -41,7 +39,7 @@ public interface UserService {
 
     User updateUser(UUID id, User user);
 
-    User updateUserRole(UUID id, String roleName);
+    User updateUserRole(UUID id, Long idRole);
 
     void deleteUser(UUID id);
 

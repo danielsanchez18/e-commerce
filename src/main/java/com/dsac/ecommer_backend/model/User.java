@@ -16,11 +16,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idUser;
 
-    private String username;
+    private String email;
     private String password;
     private String name;
     private String lastName;
-    private String email;
     private String phone;
     private String address;
     private LocalDateTime registrationDate;
@@ -45,9 +44,8 @@ public class User {
 
     public User() { }
 
-    public User(UUID idUser, String username, String password, String name, String lastName, String email, String phone, String address, LocalDateTime registrationDate, String profile, boolean enabled, Set<UserRole> userRoles, Set<Message> sentMessages, Set<Message> receivedMessages, Set<Notification> notifications) {
+    public User(UUID idUser, String password, String name, String lastName, String email, String phone, String address, LocalDateTime registrationDate, String profile, boolean enabled, Set<UserRole> userRoles, Set<Message> sentMessages, Set<Message> receivedMessages, Set<Notification> notifications) {
         this.idUser = idUser;
-        this.username = username;
         this.password = password;
         this.name = name;
         this.lastName = lastName;
@@ -69,14 +67,6 @@ public class User {
 
     public void setIdUser(UUID idUser) {
         this.idUser = idUser;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {

@@ -1,0 +1,79 @@
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_user_by_email(IN p_email VARCHAR(255))
+BEGIN
+    SELECT * FROM user WHERE email = p_email;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_user_by_name(IN p_name VARCHAR(255), IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT * FROM user WHERE CONCAT(name, ' ', lastName) LIKE CONCAT('%', p_name, '%') LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_users_by_register_date(IN p_startDate DATE, IN p_endDate DATE, IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT * FROM user WHERE registrationDate BETWEEN p_startDate AND p_endDate LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_last_user()
+BEGIN
+    SELECT * FROM user ORDER BY registration_date DESC LIMIT 1;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_users_by_role(IN p_role VARCHAR(255), IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT u.* FROM user u
+    INNER JOIN user_role ur ON u.id_user = ur.user_id_user
+    INNER JOIN role r ON ur.role_id_role = r.id_role
+    WHERE r.role_name = p_role LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_users_by_enabled(IN p_enabled BOOLEAN, IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT * FROM user WHERE enabled = p_enabled LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_find_top_buyers(IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT u.*, COUNT(o.idOrder) AS order_count
+    FROM user u
+    INNER JOIN orders o ON u.idUser = o.user_id
+    GROUP BY u.idUser
+    ORDER BY order_count DESC LIMIT offset, p_size;
+END $$
+
+DELIMITER ;

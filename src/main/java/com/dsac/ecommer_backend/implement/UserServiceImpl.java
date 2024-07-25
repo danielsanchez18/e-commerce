@@ -1,6 +1,7 @@
 package com.dsac.ecommer_backend.implement;
 
 import com.dsac.ecommer_backend.exception.ResourceFoundException;
+import com.dsac.ecommer_backend.model.Role;
 import com.dsac.ecommer_backend.model.User;
 import com.dsac.ecommer_backend.model.UserRole;
 import com.dsac.ecommer_backend.repository.RoleRepository;
@@ -11,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.lang.module.ResolutionException;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -25,16 +29,21 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Override
-    public User saveUser(User user, Set<UserRole> userRoles) throws ResourceFoundException {
-        User userExists = this.userRepository.findByUsername(user.getUsername());
+    public User saveUser(User user) throws ResourceFoundException {
+        User userExists = this.userRepository.findByEmail(user.getEmail());
 
         if (userExists != null) {
             throw new ResourceFoundException("User already exists");
-        } else {
-            for (UserRole ur : userRoles) {
-                roleRepository.save(ur.getRole());
-            }
-            user.getUserRoles().addAll(userRoles);
+        }
+        else {
+            Role role = roleRepository.findById(1L).orElseThrow(
+                    () -> new ResolutionException("Role CLIENTE not found"));
+
+            UserRole userRole = new UserRole();
+            userRole.setUser(user);
+            userRole.setRole(role);
+            user.getUserRoles().add(userRole);
+            user.setRegistrationDate(LocalDateTime.now());
             userExists = userRepository.save(user);
         }
         return userExists;
@@ -45,11 +54,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -78,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersByRegisterDate(String startDate, String endDate, int page, int size) {
+    public List<User> getUsersByRegisterDate(Date startDate, Date endDate, int page, int size) {
         return userRepository.searchUserByRegisterDate(startDate, endDate, page, size);
     }
 
@@ -104,12 +108,40 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UUID id, User user) {
-        return null;
+        User existingUser = userRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("User not found"));
+
+        User userWithSameEmail = userRepository.findByEmail(user.getEmail());
+        if (userWithSameEmail != null && !userWithSameEmail.getIdUser().equals(id)) {
+            throw new RuntimeException("Email already in use");
+        }
+
+        existingUser.setName(user.getName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPhone(user.getPhone());
+        existingUser.setAddress(user.getAddress());
+        existingUser.setProfile(user.getProfile());
+        existingUser.setEnabled(user.isEnabled());
+
+        return userRepository.save(existingUser);
     }
 
     @Override
-    public User updateUserRole(UUID id, String roleName) {
-        return null;
+    public User updateUserRole(UUID idUser, Long idRole) {
+        User user = userRepository.findById(idUser).orElseThrow(
+                () -> new RuntimeException("User not found"));
+
+        Role role = roleRepository.findById(idRole).orElseThrow(
+                () -> new RuntimeException("Role not found"));
+
+        user.getUserRoles().clear();
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(role);
+        user.getUserRoles().add(userRole);
+
+        return userRepository.save(user);
     }
 
     @Override
@@ -117,3 +149,10 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 }
+
+
+
+
+
+
+

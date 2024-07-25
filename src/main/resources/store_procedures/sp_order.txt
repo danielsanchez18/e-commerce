@@ -1,0 +1,10 @@
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_orders_by_user(IN p_userId BINARY(16), IN p_page INT, IN p_size INT)
+BEGIN
+    DECLARE offset INT;
+    SET offset = (p_page - 1) * p_size;
+    SELECT * FROM orders WHERE id_user = p_userId LIMIT offset, p_size;
+END $$
+
+DELIMITER ;
