@@ -6,13 +6,16 @@ import com.dsac.ecommer_backend.model.User;
 import com.dsac.ecommer_backend.model.UserRole;
 import com.dsac.ecommer_backend.repository.RoleRepository;
 import com.dsac.ecommer_backend.repository.UserRepository;
+import com.dsac.ecommer_backend.service.UploadFileService;
 import com.dsac.ecommer_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.lang.module.ResolutionException;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -30,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UploadFileService uploadFileService;
 
     @Override
     public User saveUser(User user) throws ResourceFoundException {
@@ -111,7 +117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(UUID id, User user) {
+    public User updateUser(UUID id, User user, MultipartFile image) throws IOException {
         User existingUser = userRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("User not found"));
 
@@ -125,8 +131,12 @@ public class UserServiceImpl implements UserService {
         existingUser.setEmail(user.getEmail());
         existingUser.setPhone(user.getPhone());
         existingUser.setAddress(user.getAddress());
-        existingUser.setProfile(user.getProfile());
         existingUser.setEnabled(user.isEnabled());
+
+        if (image != null && !image.isEmpty()) {
+            String imagePath = uploadFileService.copy(image, "user");
+            existingUser.setProfile(imagePath);
+        }
 
         return userRepository.save(existingUser);
     }
@@ -153,10 +163,3 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 }
-
-
-
-
-
-
-

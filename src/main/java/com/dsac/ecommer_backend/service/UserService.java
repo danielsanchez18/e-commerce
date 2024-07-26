@@ -5,7 +5,9 @@ import com.dsac.ecommer_backend.model.User;
 import com.dsac.ecommer_backend.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +39,7 @@ public interface UserService {
 
     List<User> getTopBuyers(int page, int size);
 
-    User updateUser(UUID id, User user);
+    User updateUser(UUID id, User user, MultipartFile image) throws IOException;
 
     User updateUserRole(UUID id, Long idRole);
 

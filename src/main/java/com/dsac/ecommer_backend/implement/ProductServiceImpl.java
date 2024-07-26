@@ -4,11 +4,14 @@ import com.dsac.ecommer_backend.exception.ResourceFoundException;
 import com.dsac.ecommer_backend.model.Product;
 import com.dsac.ecommer_backend.repository.ProductRepository;
 import com.dsac.ecommer_backend.service.ProductService;
+import com.dsac.ecommer_backend.service.UploadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,13 +21,20 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UploadFileService uploadFileService;
+
     @Override
-    public Product addProduct(Product product) throws ResourceFoundException {
+    public Product addProduct(Product product, MultipartFile image) throws ResourceFoundException, IOException {
         Product prod = productRepository.findProductByName(product.getNameProduct());
 
         if (prod != null) {
             throw new ResourceFoundException("ERROR: Product already exists");
         } else {
+            if (image != null && !image.isEmpty()) {
+                String imagePath = uploadFileService.copy(image, "product");
+                product.setImageProduct(imagePath);
+            }
             return productRepository.save(product);
         }
     }
@@ -86,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(UUID id, Product product) throws ResourceFoundException {
+    public Product updateProduct(UUID id, Product product, MultipartFile image) throws ResourceFoundException, IOException {
         Product existingProduct = productRepository.findById(id).
                 orElseThrow(() -> new ResourceFoundException("Product not found"));
         Product productWhitSameName = productRepository.findProductByName(product.getNameProduct());
@@ -100,8 +110,14 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setDescription(product.getDescription());
             existingProduct.setPrice(product.getPrice());
             existingProduct.setEnabled(product.isEnabled());
-            existingProduct.setImageProduct(product.getImageProduct());
             existingProduct.setCategory(product.getCategory());
+
+            if (image != null && !image.isEmpty()) {
+                String imagePath = uploadFileService.copy(image, "product");
+                existingProduct.setImageProduct(imagePath);
+
+            }
+
             return productRepository.save(existingProduct);
         }
     }

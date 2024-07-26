@@ -4,13 +4,15 @@ import com.dsac.ecommer_backend.exception.ResourceFoundException;
 import com.dsac.ecommer_backend.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
 
-    Product addProduct (Product product) throws ResourceFoundException;
+    Product addProduct (Product product, MultipartFile image) throws ResourceFoundException, IOException;
 
     Page<Product> getAllProducts (Pageable pageable);
 
@@ -34,7 +36,8 @@ public interface ProductService {
 
     Product getTopBuyerProduct(UUID idUser);
 
-    Product updateProduct (UUID id, Product product) throws ResourceFoundException;
+    Product updateProduct (UUID id, Product product, MultipartFile image) throws ResourceFoundException, IOException;
 
     void deleteProduct (UUID id);
+
 }

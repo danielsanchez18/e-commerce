@@ -22,7 +22,10 @@ public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/auth/*",
-            "/user/save",
+            "/user/*",
+            "/user/*/*",
+            "/user/id/{id}",
+            "/user/update/{id}",
     };
 
     @Autowired

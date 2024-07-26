@@ -4,13 +4,16 @@ import com.dsac.ecommer_backend.exception.ResourceFoundException;
 import com.dsac.ecommer_backend.model.User;
 import com.dsac.ecommer_backend.model.UserRole;
 import com.dsac.ecommer_backend.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -86,9 +89,19 @@ public class UserController {
         return userService.getTopBuyers(pageable.getPageNumber(), pageable.getPageSize());
     }
 
+//    @PutMapping("/update/{id}")
+//    public User updateUser(@PathVariable UUID id, @RequestBody User user) {
+//        return userService.updateUser(id, user);
+//    }
+
     @PutMapping("/update/{id}")
-    public User updateUser(@PathVariable UUID id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public User updateUser(@PathVariable UUID id,
+                           @RequestPart("user") String userJson,
+                           @RequestPart ("image") MultipartFile image) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        User user = objectMapper.readValue(userJson, User.class);
+
+        return userService.updateUser(id, user, image);
     }
 
     @PutMapping("/update-role/{idUser}/{idRole}")
