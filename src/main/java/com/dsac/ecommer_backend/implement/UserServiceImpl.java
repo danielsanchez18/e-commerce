@@ -1,6 +1,7 @@
 package com.dsac.ecommer_backend.implement;
 
 import com.dsac.ecommer_backend.exception.ResourceFoundException;
+import com.dsac.ecommer_backend.model.JwtRequest;
 import com.dsac.ecommer_backend.model.Role;
 import com.dsac.ecommer_backend.model.User;
 import com.dsac.ecommer_backend.model.UserRole;
@@ -8,6 +9,8 @@ import com.dsac.ecommer_backend.repository.RoleRepository;
 import com.dsac.ecommer_backend.repository.UserRepository;
 import com.dsac.ecommer_backend.service.UploadFileService;
 import com.dsac.ecommer_backend.service.UserService;
+import com.dsac.ecommer_backend.utils.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +39,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UploadFileService uploadFileService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private HttpServletRequest request;
 
     @Override
     public User saveUser(User user) throws ResourceFoundException {
@@ -161,5 +170,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        String token = request.getHeader("Authorization").substring(7);
+        String email = jwtUtils.extractUsername(token);
+        return userRepository.findByEmail(email);
     }
 }

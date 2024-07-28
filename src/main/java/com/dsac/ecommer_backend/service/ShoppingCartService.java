@@ -1,7 +1,9 @@
 package com.dsac.ecommer_backend.service;
 
 import com.dsac.ecommer_backend.model.Order;
+import com.dsac.ecommer_backend.model.OrderDetail;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ShoppingCartService {
@@ -14,7 +16,7 @@ public interface ShoppingCartService {
 
     void clearCart();
 
-    void viewCart();
+    List<OrderDetail> viewCart();
 
     void updateProductQuantity (UUID productId, int quantity);
 

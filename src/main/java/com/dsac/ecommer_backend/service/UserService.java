@@ -45,4 +45,5 @@ public interface UserService {
 
     void deleteUser(UUID id);
 
+    User getCurrentUser ();
 }

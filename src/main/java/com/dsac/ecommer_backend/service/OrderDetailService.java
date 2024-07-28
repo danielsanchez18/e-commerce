@@ -11,7 +11,7 @@ public interface OrderDetailService {
 
     OrderDetail getOrderDetailById(UUID orderDetailId);
 
-    OrderDetail deleteOrderDetail(UUID orderDetailId);
+    void deleteOrderDetail(UUID orderDetailId);
 
     List<OrderDetail> viewOrderDetails (UUID orderId);
 

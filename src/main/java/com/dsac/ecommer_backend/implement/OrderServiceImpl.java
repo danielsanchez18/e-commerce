@@ -1,6 +1,8 @@
 package com.dsac.ecommer_backend.implement;
 
 import com.dsac.ecommer_backend.model.Order;
+import com.dsac.ecommer_backend.model.OrderDetail;
+import com.dsac.ecommer_backend.repository.OrderDetailRepository;
 import com.dsac.ecommer_backend.repository.OrderRepository;
 import com.dsac.ecommer_backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     @Override
     public Order getOrderById(UUID orderId) {
@@ -34,7 +38,24 @@ public class OrderServiceImpl implements OrderService {
                 () -> new RuntimeException("Order not found with id " + idOrder)
         );
 
-        return null;
+        order.setType(savedOrder.getType());
+        order.setAddress(savedOrder.getAddress());
+        order.setPhone(savedOrder.getPhone());
+        order.setComment(savedOrder.getComment());
+        order.setStatus(savedOrder.getStatus());
+        order.setWaitingTime(savedOrder.getWaitingTime());
+        order.setDeliveryPrice(savedOrder.getDeliveryPrice());
+        order.setTotalPrice(savedOrder.getTotalPrice());
+
+        if (savedOrder.getOrderDetails() != null) {
+            orderDetailRepository.deleteAllByOrderId(idOrder);
+
+            for (OrderDetail detail : savedOrder.getOrderDetails()) {
+                detail.setOrder(order);
+                orderDetailRepository.save(detail);
+            }
+        }
+        return orderRepository.save(order);
     }
 
     @Override

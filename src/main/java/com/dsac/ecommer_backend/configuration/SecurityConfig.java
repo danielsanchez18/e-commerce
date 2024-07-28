@@ -26,6 +26,8 @@ public class SecurityConfig {
             "/user/*/*",
             "/user/id/{id}",
             "/user/update/{id}",
+            "/product/*",
+            "/shop/*"
     };
 
     @Autowired

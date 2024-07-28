@@ -27,15 +27,6 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private UploadFileService uploadFileService;
-
-
-//    @PostMapping("/save")
-//    public Product addProduct(@RequestBody Product product) throws ResourceFoundException {
-//        return productService.addProduct(product);
-//    }
-
     @PostMapping("/save")
     public Product addProduct(@RequestPart("product") Product product,
                               @RequestPart("image") MultipartFile image) throws ResourceFoundException, IOException {
@@ -63,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public Page<Product> getAllProducts(@PageableDefault(page = 1, size = 10) Pageable pageable) {
+    public Page<Product> getAllProducts(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         return productService.getAllProducts(pageable);
     }
 
@@ -96,11 +87,6 @@ public class ProductController {
     public List<Product> getTopBuyingProducts(@PageableDefault(page = 1, size = 10) Pageable pageable) {
         return productService.getTopBuyingProducts(pageable.getPageNumber(), pageable.getPageSize());
     }
-
-//    @PutMapping("/update/{id}")
-//    public Product updateProduct(@PathVariable UUID id, @RequestBody Product product) throws ResourceFoundException {
-//        return productService.updateProduct(id, product);
-//    }
 
     @PutMapping("/update/{id}")
     public Product updateProduct(@PathVariable UUID id,

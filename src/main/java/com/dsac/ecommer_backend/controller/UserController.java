@@ -2,7 +2,6 @@ package com.dsac.ecommer_backend.controller;
 
 import com.dsac.ecommer_backend.exception.ResourceFoundException;
 import com.dsac.ecommer_backend.model.User;
-import com.dsac.ecommer_backend.model.UserRole;
 import com.dsac.ecommer_backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +87,6 @@ public class UserController {
     public List<User> getTopBuyers(@PageableDefault(page = 1, size = 10) Pageable pageable) {
         return userService.getTopBuyers(pageable.getPageNumber(), pageable.getPageSize());
     }
-
-//    @PutMapping("/update/{id}")
-//    public User updateUser(@PathVariable UUID id, @RequestBody User user) {
-//        return userService.updateUser(id, user);
-//    }
 
     @PutMapping("/update/{id}")
     public User updateUser(@PathVariable UUID id,
